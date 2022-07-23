@@ -1,3 +1,5 @@
 # Appolo-api
 
-Appolo is a trading bot that fetch hourly prices / indicators like rsi and many others and automatically trade on trading platforms like binance
+The API is used to communicate with the trading platforms, monitor strategies, accounts and funds.
+
+![image](https://user-images.githubusercontent.com/20693404/180626370-28bb160c-3d67-419f-972c-73a345d3c998.png)
