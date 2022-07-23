@@ -1,0 +1,698 @@
+basePath: /1.0
+definitions:
+  models.APIError:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+    type: object
+  models.Account:
+    properties:
+      apiKey:
+        type: string
+      id:
+        type: integer
+      insertedDate:
+        type: string
+      name:
+        type: string
+      secretKey:
+        type: string
+    type: object
+  models.BinanceAccount:
+    properties:
+      balances:
+        items:
+          properties:
+            asset:
+              type: string
+            free:
+              type: string
+            locked:
+              type: string
+          type: object
+        type: array
+      canDeposit:
+        type: boolean
+      canTrade:
+        type: boolean
+      canWithdraw:
+        type: boolean
+      makerCommission:
+        type: integer
+      permissions:
+        items:
+          type: string
+        type: array
+      takerCommission:
+        type: integer
+      updateTime:
+        type: integer
+    type: object
+  models.Converter:
+    properties:
+      from:
+        type: string
+      quantity:
+        type: number
+      to:
+        type: string
+    type: object
+  models.FuturesAccount:
+    properties:
+      asset:
+        type: string
+      availableBalance:
+        type: string
+    type: object
+  models.FuturesOrder:
+    properties:
+      commission:
+        type: string
+      orderId:
+        type: number
+      origQty:
+        type: string
+      price:
+        type: string
+      realizedPNL:
+        type: string
+      side:
+        type: string
+      symbol:
+        type: string
+      type:
+        type: string
+      updateTime:
+        type: integer
+    type: object
+  models.FuturesPosition:
+    properties:
+      entryPrice:
+        type: string
+      leverage:
+        type: string
+      positionAmt:
+        type: string
+      symbol:
+        type: string
+      unRealizedProfit:
+        type: string
+      updateTime:
+        $ref: '#/definitions/models.intToTime'
+    type: object
+  models.HourlyDataFetchOnCurrency:
+    properties:
+      bollingerBands:
+        items:
+          type: number
+        type: array
+      chopinessIndex:
+        type: number
+      close:
+        type: number
+      closeTime:
+        type: string
+      currencyName:
+        type: string
+      high:
+        type: number
+      ichimoku:
+        items:
+          type: number
+        type: array
+      id:
+        type: integer
+      insertedDate:
+        type: string
+      low:
+        type: number
+      ma:
+        type: number
+      obv:
+        type: number
+      open:
+        type: number
+      openTime:
+        type: string
+      rsi:
+        type: number
+      sma:
+        type: number
+      stochastic:
+        type: number
+      supertrend:
+        type: string
+      volume:
+        type: number
+    type: object
+  models.Order:
+    properties:
+      executedQty:
+        type: string
+      fills:
+        items:
+          properties:
+            commission:
+              type: string
+            price:
+              type: string
+            qty:
+              type: string
+          type: object
+        type: array
+      orderId:
+        type: number
+      side:
+        type: string
+      status:
+        type: string
+      symbol:
+        type: string
+      transactTime:
+        type: integer
+      type:
+        type: string
+    type: object
+  models.Prices:
+    properties:
+      price:
+        type: string
+      symbol:
+        type: string
+    type: object
+  models.Strategy:
+    properties:
+      accountName:
+        type: string
+      currencyName:
+        type: string
+      id:
+        type: integer
+      interval:
+        type: string
+      leverage:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.TotalPNLAndCommission:
+    properties:
+      commission:
+        type: number
+      pnl:
+        type: number
+    type: object
+  models.intToTime:
+    properties:
+      time.Time:
+        type: string
+    type: object
+info:
+  contact:
+    email: pierre.saintsorny@gmail.com
+    name: API Support
+  description: This is the documentation for the golang api of appolo-api
+  title: Appolo API
+  version: "1"
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: ""
+      summary: Index of the api
+  /account:
+    delete:
+      parameters:
+      - description: my_account
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Delete an account
+    get:
+      parameters:
+      - description: my_account
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Account'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get one or multiple account
+    post:
+      parameters:
+      - description: my_account
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: 38fzefzef74723jh
+        in: query
+        name: api_key
+        required: true
+        type: string
+      - description: 38fzefzef74723jh
+        in: query
+        name: secret_key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Create a new account
+  /binance/account:
+    get:
+      parameters:
+      - description: BTC
+        in: query
+        name: asset
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BinanceAccount'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get Account Informations about one or multiple asset
+  /binance/futures/account:
+    get:
+      parameters:
+      - description: BTC
+        in: query
+        name: asset
+        type: string
+      - description: my_account
+        in: query
+        name: account_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FuturesAccount'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get Futures Account Informations about one or multiple asset
+  /binance/futures/order/buy:
+    post:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: strategy
+        required: true
+        type: string
+      - description: "0.01"
+        in: query
+        name: quantity
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FuturesOrder'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Buy from binance futures using market order
+  /binance/futures/order/sell:
+    post:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: strategy
+        required: true
+        type: string
+      - description: "0.01"
+        in: query
+        name: quantity
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FuturesOrder'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: sell from binance futures using market order
+  /binance/futures/position:
+    get:
+      parameters:
+      - description: BTCUSDT
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: my_account
+        in: query
+        name: account_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FuturesPosition'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get Futures position informations
+  /binance/order/buy:
+    post:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: strategy
+        required: true
+        type: string
+      - description: "0.01"
+        in: query
+        name: quantity
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Buy from binance using market order
+  /binance/order/sell:
+    post:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: strategy
+        required: true
+        type: string
+      - description: "0.01"
+        in: query
+        name: quantity
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: sell from binance using market order
+  /binance/price:
+    get:
+      parameters:
+      - description: BTCUSDT
+        in: query
+        name: symbol
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Prices'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get price for a given symbol
+  /convert:
+    get:
+      parameters:
+      - description: USDT
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: BTC
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: "100"
+        in: query
+        name: quantity
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Converter'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Convert from asset one to two with a given quantity
+  /data/hourly:
+    get:
+      parameters:
+      - description: BTCUSDT
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: "5"
+        in: query
+        name: x
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.HourlyDataFetchOnCurrency'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get Hourly data fetch of binance from the scrapper
+  /strategy:
+    delete:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Delete a strategy
+    get:
+      parameters:
+      - description: my_first_strategy
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Strategy'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get one or multiple strategy
+    post:
+      parameters:
+      - description: BTCUSDT
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: my_first_strategy_BTCUSDT
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: 1h
+        in: query
+        name: interval
+        required: true
+        type: string
+      - description: "10"
+        in: query
+        name: leverage
+        required: true
+        type: string
+      - description: undefined
+        in: query
+        name: account_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Create a new strategy
+  /strategy/result:
+    get:
+      parameters:
+      - description: my_strategy
+        in: query
+        name: strategy_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TotalPNLAndCommission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.APIError'
+      summary: Get the total pnl and commission for a strategy
+swagger: "2.0"
