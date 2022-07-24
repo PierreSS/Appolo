@@ -1,4 +1,4 @@
-# Appolo-api
+# Appolo
 
 Appolo is a crypto trading bot meant to make everyone rich (very quick)
 
